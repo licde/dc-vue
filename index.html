@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dongdong Tech - Digital Transformation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Inter', 'Noto Sans SC', sans-serif;
+      }
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue3-sfc-loader/dist/vue3-sfc-loader.js"></script>
+    <script type="importmap">
+    {
+      "imports": {
+        "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js",
+        "lucide-vue-next": "https://esm.sh/lucide-vue-next@0.344.0"
+      }
+    }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module">
+      import * as Vue from 'vue';
+      import * as LucideVueNext from 'lucide-vue-next';
+
+      const options = {
+        moduleCache: {
+          vue: Vue,
+          'lucide-vue-next': LucideVueNext
+        },
+        async getFile(url) {
+          const res = await fetch(url);
+          if ( !res.ok )
+             throw Object.assign(new Error(res.statusText + ' ' + url), { res });
+          return {
+             getContentData: asBinary => asBinary ? res.arrayBuffer() : res.text(),
+          }
+        },
+        addStyle(textContent) {
+          const style = document.createElement('style');
+          style.textContent = textContent;
+          const ref = document.head.getElementsByTagName('style')[0] || null;
+          document.head.insertBefore(style, ref);
+        },
+      }
+
+      const { loadModule } = window['vue3-sfc-loader'];
+
+      const app = Vue.createApp(Vue.defineAsyncComponent(() => loadModule('./App.vue', options)));
+      app.mount('#root');
+    </script>
+  </body>
+</html>
